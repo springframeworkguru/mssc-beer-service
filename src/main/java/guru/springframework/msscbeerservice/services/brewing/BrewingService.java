@@ -1,4 +1,4 @@
-package guru.springframework.msscbeerservice.services;
+package guru.springframework.msscbeerservice.services.brewing;
 
 import guru.springframework.msscbeerservice.config.JmsConfig;
 import guru.springframework.msscbeerservice.domain.Beer;
