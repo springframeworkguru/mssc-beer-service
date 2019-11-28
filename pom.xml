@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.github.sfg-beer-works</groupId>
         <artifactId>sfg-brewery-bom</artifactId>
-        <version>1.0.7</version>
+        <version>1.0.11</version>
     </parent>
 
     <artifactId>mssc-beer-service</artifactId>
