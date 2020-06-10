@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -46,27 +47,23 @@ public class BeerServiceImpl implements BeerService {
             beerPage = beerRepository.findAll(pageRequest);
         }
 
-        if (showInventoryOnHand){
-            beerPagedList = new BeerPagedList(beerPage
-                    .getContent()
-                    .stream()
-                    .map(beerMapper::beerToBeerDtoWithInventory)
-                    .collect(Collectors.toList()),
-                    PageRequest
-                            .of(beerPage.getPageable().getPageNumber(),
-                                    beerPage.getPageable().getPageSize()),
-                    beerPage.getTotalElements());
+        Function<Beer, BeerDto> mappingFunction;
+
+        if (showInventoryOnHand) {
+            mappingFunction = beerMapper::beerToBeerDtoWithInventory;
         } else {
-            beerPagedList = new BeerPagedList(beerPage
-                    .getContent()
-                    .stream()
-                    .map(beerMapper::beerToBeerDto)
-                    .collect(Collectors.toList()),
-                    PageRequest
-                            .of(beerPage.getPageable().getPageNumber(),
-                                    beerPage.getPageable().getPageSize()),
-                    beerPage.getTotalElements());
+            mappingFunction = beerMapper::beerToBeerDto;
         }
+
+        beerPagedList = new BeerPagedList(beerPage
+                .getContent()
+                .stream()
+                .map(mappingFunction)
+                .collect(Collectors.toList()),
+                PageRequest
+                        .of(beerPage.getPageable().getPageNumber(),
+                                beerPage.getPageable().getPageSize()),
+                beerPage.getTotalElements());
 
         return beerPagedList;
     }
