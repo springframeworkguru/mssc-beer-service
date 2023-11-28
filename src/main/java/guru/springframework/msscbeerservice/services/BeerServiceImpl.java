@@ -51,7 +51,7 @@ public class BeerServiceImpl implements BeerService {
     return new BeerPagedList(beerPage
       .getContent()
       .stream()
-      .map(showInventoryOnHand ? beerMapper::beerToBeerDtoWithInventory : beerMapper::beerToBeerDto)
+      .map(Boolean.TRUE.equals(showInventoryOnHand) ? beerMapper::beerToBeerDtoWithInventory : beerMapper::beerToBeerDto)
       .collect(Collectors.toList()),
       pageable,
       beerPage.getTotalElements());
@@ -60,7 +60,7 @@ public class BeerServiceImpl implements BeerService {
     @Cacheable(cacheNames = "beerCache", key = "#beerId", condition = "#showInventoryOnHand == false ")
     @Override
     public BeerDto getById(UUID beerId, Boolean showInventoryOnHand) {
-        if (showInventoryOnHand) {
+        if (Boolean.TRUE.equals(showInventoryOnHand)) {
             return beerMapper.beerToBeerDtoWithInventory(
                     beerRepository.findById(beerId).orElseThrow(NotFoundException::new)
             );
